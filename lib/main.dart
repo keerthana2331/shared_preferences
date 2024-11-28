@@ -1,8 +1,9 @@
+// ignore_for_file: prefer_const_constructors, avoid_types_as_parameter_names, non_constant_identifier_names, use_key_in_widget_constructors
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:shared_preferences_1/screens/detailed%20settings%20screen.dart';
 import 'package:shared_preferences_1/theme%20provider.dart';
-
+import 'settings_screen.dart';
 
 
 void main() {
@@ -11,29 +12,29 @@ void main() {
 
 class MyApp extends StatefulWidget {
   @override
-  _MyAppState createState() => _MyAppState();
+  MyAppState createState() => MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
-  late bool _isDarkTheme;
+class MyAppState extends State<MyApp> {
+  late bool isDarkTheme;
 
   @override
   void initState() {
     super.initState();
-    _loadTheme();
+    loadTheme();
   }
 
-  Future<void> _loadTheme() async {
+  Future<void> loadTheme() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      _isDarkTheme = prefs.getBool('isDarkTheme') ?? false;
+      isDarkTheme = prefs.getBool('isDarkTheme') ?? false;
     });
   }
 
-  Future<void> _toggleTheme(bool isDark) async {
+  Future<void> toggleTheme(bool isDark) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      _isDarkTheme = isDark;
+      isDarkTheme = isDark;
     });
     await prefs.setBool('isDarkTheme', isDark);
   }
@@ -42,11 +43,16 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Enhanced Animated App',
-      theme: _isDarkTheme ? ThemeProvider.darkTheme : ThemeProvider.lightTheme,
-      home: UsernameScreen(
-        isDarkTheme: _isDarkTheme,
-        onThemeChanged: _toggleTheme,
+      title: 'Enhanced Settings',
+      theme: isDarkTheme ? ThemeProvider.darkTheme : ThemeProvider.lightTheme,
+      home: AnimatedContainer(
+        duration: Duration(milliseconds: 800),
+        curve: Curves.easeInOut,
+        color: isDarkTheme ? ThemeProvider.darkBackground : ThemeProvider.lightBackground,
+        child: SettingsScreen(
+          isDarkTheme: isDarkTheme,
+          onThemeChanged: toggleTheme, username: '', onUsernameChanged: (String ) {  },
+        ),
       ),
     );
   }
