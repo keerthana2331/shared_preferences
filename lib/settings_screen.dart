@@ -270,7 +270,7 @@ class SettingsScreenState extends State<SettingsScreen> {
           showSnackbar('Username saved successfully!'); 
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor: widget.isDarkTheme ? Colors.purpleAccent : Colors.tealAccent,
+          backgroundColor: widget.isDarkTheme ? Colors.purpleAccent : const Color.fromARGB(255, 39, 38, 38),
           padding: EdgeInsets.symmetric(vertical: 15),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
