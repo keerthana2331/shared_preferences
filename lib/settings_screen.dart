@@ -10,7 +10,9 @@ class SettingsScreen extends StatefulWidget {
   const SettingsScreen({
     Key? key,
     required this.isDarkTheme,
-    required this.onThemeChanged, required String username, required Null Function(dynamic String) onUsernameChanged,
+    required this.onThemeChanged,
+    required String username,
+    required Null Function(dynamic String) onUsernameChanged,
   }) : super(key: key);
 
   @override
@@ -25,30 +27,28 @@ class SettingsScreenState extends State<SettingsScreen> {
   @override
   void initState() {
     super.initState();
-    loadUsername(); 
+    loadUsername();
   }
-
 
   loadUsername() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      username = prefs.getString('username') ?? ''; 
-      usernameController.text = username; 
+      username = prefs.getString('username') ?? '';
+      usernameController.text = username;
     });
   }
 
-
   saveUsername(String username) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('username', username); 
+    prefs.setString('username', username);
   }
 
-  
   showSnackbar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: widget.isDarkTheme ? Colors.purpleAccent : Colors.tealAccent,
+        backgroundColor:
+            widget.isDarkTheme ? Colors.purpleAccent : Colors.tealAccent,
       ),
     );
   }
@@ -62,7 +62,7 @@ class SettingsScreenState extends State<SettingsScreen> {
           gradient: LinearGradient(
             colors: widget.isDarkTheme
                 ? [Color(0xFF121212), Colors.deepPurple[900]!]
-                : [Colors.lightBlue[50]!, Colors.teal[100]!], 
+                : [Colors.lightBlue[50]!, Colors.teal[100]!],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -82,7 +82,8 @@ class SettingsScreenState extends State<SettingsScreen> {
                       subtitle: 'Receive app updates and alerts',
                       icon: Icons.notifications_active_rounded,
                       value: enableNotifications,
-                      onChanged: (value) => setState(() => enableNotifications = value),
+                      onChanged: (value) =>
+                          setState(() => enableNotifications = value),
                     ),
                     buildSettingOption(
                       title: 'Dark Mode',
@@ -91,8 +92,7 @@ class SettingsScreenState extends State<SettingsScreen> {
                       value: widget.isDarkTheme,
                       onChanged: (value) => widget.onThemeChanged(value),
                     ),
-                
-                  _buildSaveButton(),
+                    _buildSaveButton(),
                   ],
                 ),
               ),
@@ -106,55 +106,72 @@ class SettingsScreenState extends State<SettingsScreen> {
   Widget buildHeader() {
     return Padding(
       padding: const EdgeInsets.all(20.0),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CircleAvatar(
-            radius: 40,
-            backgroundColor: widget.isDarkTheme 
-              ? Colors.purpleAccent.withOpacity(0.2) 
-              : Colors.tealAccent.withOpacity(0.2),
-            child: Icon(
-              Icons.person_rounded,
-              size: 40,
-              color: widget.isDarkTheme 
-                ? Colors.purpleAccent 
-                : Colors.tealAccent,
-            ),
-          ),
-          const SizedBox(width: 20),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          Row(
             children: [
-              Text(
-                'Hello, $username!',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
+              CircleAvatar(
+                radius: 40,
+                backgroundColor: widget.isDarkTheme
+                    ? Colors.purpleAccent.withOpacity(0.2)
+                    : Colors.tealAccent.withOpacity(0.2),
+                child: Icon(
+                  Icons.person_rounded,
+                  size: 40,
+                  color: widget.isDarkTheme
+                      ? Colors.purpleAccent
+                      : Colors.tealAccent,
                 ),
               ),
-              Text(
-                'Customize your experience',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: widget.isDarkTheme 
-                    ? Colors.white70 
-                    : Colors.black54, 
+              const SizedBox(width: 20),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Hello,',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
+                    ),
+                    Text(
+                      username,
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
                 ),
               ),
             ],
+          ),
+          const SizedBox(height: 10),
+          Text(
+            'Customize your experience',
+            style: TextStyle(
+              fontSize: 14,
+              color: widget.isDarkTheme ? Colors.white70 : Colors.black54,
+            ),
           ),
         ],
       ),
     );
   }
 
-
   Widget buildUsernameSection() {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
       decoration: BoxDecoration(
-        color: widget.isDarkTheme ? Color(0xFF1E1E1E) : Colors.white.withOpacity(0.8), 
+        color: widget.isDarkTheme
+            ? Color(0xFF1E1E1E)
+            : Colors.white.withOpacity(0.8),
         borderRadius: BorderRadius.circular(15),
         boxShadow: [
           BoxShadow(
@@ -182,14 +199,16 @@ class SettingsScreenState extends State<SettingsScreen> {
             borderSide: BorderSide.none,
           ),
           filled: true,
-          fillColor: widget.isDarkTheme ? Color(0xFF1E1E1E) : Colors.white.withOpacity(0.8),
+          fillColor: widget.isDarkTheme
+              ? Color(0xFF1E1E1E)
+              : Colors.white.withOpacity(0.8),
         ),
         style: TextStyle(
           color: widget.isDarkTheme ? Colors.white : Colors.black87,
         ),
         onChanged: (value) {
           setState(() {
-            username = value; 
+            username = value;
           });
         },
       ),
@@ -206,9 +225,9 @@ class SettingsScreenState extends State<SettingsScreen> {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
       decoration: BoxDecoration(
-        color: widget.isDarkTheme 
-          ? Color(0xFF1E1E1E)
-          : Colors.white.withOpacity(0.8), 
+        color: widget.isDarkTheme
+            ? Color(0xFF1E1E1E)
+            : Colors.white.withOpacity(0.8),
         borderRadius: BorderRadius.circular(15),
         boxShadow: [
           BoxShadow(
@@ -233,44 +252,48 @@ class SettingsScreenState extends State<SettingsScreen> {
           subtitle,
           style: TextStyle(
             fontSize: 12,
-            color: widget.isDarkTheme 
-              ? Colors.white70 
-              : Colors.black54,
+            color: widget.isDarkTheme ? Colors.white70 : Colors.black54,
           ),
         ),
         secondary: Container(
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: value 
-              ? (widget.isDarkTheme ? Colors.purpleAccent.withOpacity(0.2) : Colors.tealAccent.withOpacity(0.2))
-              : Colors.grey.withOpacity(0.2),
+            color: value
+                ? (widget.isDarkTheme
+                    ? Colors.purpleAccent.withOpacity(0.2)
+                    : Colors.tealAccent.withOpacity(0.2))
+                : Colors.grey.withOpacity(0.2),
             borderRadius: BorderRadius.circular(10),
           ),
           child: Icon(
             icon,
-            color: value 
-              ? (widget.isDarkTheme ? Colors.purpleAccent : const Color.fromARGB(255, 8, 229, 178))
-              : Colors.grey,
+            color: value
+                ? (widget.isDarkTheme
+                    ? Colors.purpleAccent
+                    : const Color.fromARGB(255, 8, 229, 178))
+                : Colors.grey,
           ),
         ),
         value: value,
         onChanged: onChanged,
-        activeColor: widget.isDarkTheme ? Colors.purpleAccent : Colors.tealAccent,
+        activeColor:
+            widget.isDarkTheme ? Colors.purpleAccent : Colors.tealAccent,
       ),
     );
   }
-
 
   Widget _buildSaveButton() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 20.0),
       child: ElevatedButton(
         onPressed: () {
-          saveUsername(username); 
-          showSnackbar('Username saved successfully!'); 
+          saveUsername(username);
+          showSnackbar('Username saved successfully!');
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor: widget.isDarkTheme ? Colors.purpleAccent : const Color.fromARGB(255, 39, 38, 38),
+          backgroundColor: widget.isDarkTheme
+              ? Colors.purpleAccent
+              : const Color.fromARGB(255, 39, 38, 38),
           padding: EdgeInsets.symmetric(vertical: 15),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
