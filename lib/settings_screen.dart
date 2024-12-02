@@ -198,35 +198,210 @@ class SettingsScreenState extends State<SettingsScreen> {
           ),
         ],
       ),
-      child: TextField(
-        controller: usernameController,
-        decoration: InputDecoration(
-          labelText: 'Username',
-          labelStyle: TextStyle(
-            color: widget.isDarkTheme ? Colors.white : Colors.black87,
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              username.isNotEmpty ? username : 'No username set',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: widget.isDarkTheme ? Colors.white : Colors.black87,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
-          prefixIcon: Icon(
-            Icons.person_rounded,
-            color: widget.isDarkTheme ? Colors.purpleAccent : Colors.tealAccent,
-          ),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(15),
-            borderSide: BorderSide.none,
-          ),
-          filled: true,
-          fillColor: widget.isDarkTheme
-              ? Color(0xFF1E1E1E)
-              : Colors.white.withOpacity(0.8),
-        ),
-        style: TextStyle(
-          color: widget.isDarkTheme ? Colors.white : Colors.black87,
-        ),
-        onChanged: (value) {
-          setState(() {
-            username = value;
-          });
-        },
+          const SizedBox(width: 89),
+          if (username.isEmpty)
+            ElevatedButton(
+              onPressed: () {
+                showAddUsernameDialog();
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: widget.isDarkTheme
+                    ? Colors.purpleAccent
+                    : Colors.tealAccent,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              child: const Text('Add Username'),
+            )
+          else
+            Row(
+              children: [
+                IconButton(
+                  icon: Icon(
+                    Icons.edit,
+                    color:
+                        widget.isDarkTheme ? Colors.purpleAccent : Colors.teal,
+                  ),
+                  onPressed: () {
+                    showEditDialog();
+                  },
+                ),
+                IconButton(
+                  icon: Icon(
+                    Icons.delete,
+                    color: widget.isDarkTheme ? Colors.redAccent : Colors.red,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      username = '';
+                      usernameController.clear();
+                    });
+                    saveUsername('');
+                    showSnackbar('Username cleared successfully.');
+                  },
+                ),
+              ],
+            ),
+        ],
       ),
+    );
+  }
+
+  void showAddUsernameDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        TextEditingController tempController = TextEditingController();
+
+        return AlertDialog(
+          title: Text(
+            'Add Username',
+            style: TextStyle(
+              color: widget.isDarkTheme ? Colors.white : Colors.black87,
+            ),
+          ),
+          backgroundColor:
+              widget.isDarkTheme ? Color(0xFF1E1E1E) : Colors.white,
+          content: TextField(
+            controller: tempController,
+            decoration: InputDecoration(
+              labelText: 'Enter Username',
+              labelStyle: TextStyle(
+                color: widget.isDarkTheme ? Colors.white70 : Colors.black54,
+              ),
+              border: OutlineInputBorder(),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: widget.isDarkTheme
+                      ? Colors.purpleAccent
+                      : Colors.tealAccent,
+                ),
+              ),
+            ),
+            style: TextStyle(
+              color: widget.isDarkTheme ? Colors.white : Colors.black87,
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text(
+                'Cancel',
+                style: TextStyle(
+                  color: widget.isDarkTheme
+                      ? Colors.purpleAccent
+                      : Colors.tealAccent,
+                ),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  username = tempController.text;
+                });
+                saveUsername(username);
+                Navigator.pop(context);
+                showSnackbar('Username added successfully!');
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: widget.isDarkTheme
+                    ? Colors.purpleAccent
+                    : Colors.tealAccent,
+              ),
+              child: const Text('Add'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void showEditDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        TextEditingController tempController =
+            TextEditingController(text: username);
+
+        return AlertDialog(
+          title: Text(
+            'Edit Username',
+            style: TextStyle(
+              color: widget.isDarkTheme ? Colors.white : Colors.black87,
+            ),
+          ),
+          backgroundColor:
+              widget.isDarkTheme ? Color(0xFF1E1E1E) : Colors.white,
+          content: TextField(
+            controller: tempController,
+            decoration: InputDecoration(
+              labelText: 'Username',
+              labelStyle: TextStyle(
+                color: widget.isDarkTheme ? Colors.white70 : Colors.black54,
+              ),
+              border: OutlineInputBorder(),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: widget.isDarkTheme
+                      ? Colors.purpleAccent
+                      : Colors.tealAccent,
+                ),
+              ),
+            ),
+            style: TextStyle(
+              color: widget.isDarkTheme ? Colors.white : Colors.black87,
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text(
+                'Cancel',
+                style: TextStyle(
+                  color: widget.isDarkTheme
+                      ? Colors.purpleAccent
+                      : Colors.tealAccent,
+                ),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  username = tempController.text;
+                });
+                saveUsername(username);
+                Navigator.pop(context);
+                showSnackbar('Username updated successfully!');
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: widget.isDarkTheme
+                    ? Colors.purpleAccent
+                    : Colors.tealAccent,
+              ),
+              child: const Text('Save'),
+            ),
+          ],
+        );
+      },
     );
   }
 
