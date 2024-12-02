@@ -5,7 +5,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shared_preferences_1/theme%20provider.dart';
 import 'settings_screen.dart';
 
-
 void main() {
   runApp(MyApp());
 }
@@ -48,10 +47,14 @@ class MyAppState extends State<MyApp> {
       home: AnimatedContainer(
         duration: Duration(milliseconds: 800),
         curve: Curves.easeInOut,
-        color: isDarkTheme ? ThemeProvider.darkBackground : ThemeProvider.lightBackground,
+        color: isDarkTheme
+            ? ThemeProvider.darkBackground
+            : ThemeProvider.lightBackground,
         child: SettingsScreen(
           isDarkTheme: isDarkTheme,
-          onThemeChanged: toggleTheme, username: '', onUsernameChanged: (String ) {  },
+          onThemeChanged: toggleTheme,
+          username: '',
+          onUsernameChanged: (String) {},
         ),
       ),
     );

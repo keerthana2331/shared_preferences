@@ -9,7 +9,8 @@ class ThemeProvider {
     appBarTheme: AppBarTheme(
       backgroundColor: Colors.tealAccent,
       elevation: 0,
-      titleTextStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.black),
+      titleTextStyle: TextStyle(
+          fontWeight: FontWeight.bold, fontSize: 20, color: Colors.black),
     ),
     textTheme: TextTheme(
       bodyMedium: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
@@ -28,10 +29,12 @@ class ThemeProvider {
     appBarTheme: AppBarTheme(
       backgroundColor: Colors.purpleAccent,
       elevation: 0,
-      titleTextStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),
+      titleTextStyle: TextStyle(
+          fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),
     ),
     textTheme: TextTheme(
-      bodyMedium: TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: Colors.white70),
+      bodyMedium: TextStyle(
+          fontSize: 16, fontWeight: FontWeight.w400, color: Colors.white70),
     ),
     cardTheme: CardTheme(
       color: Color(0xFF1E1E1E),

@@ -28,9 +28,10 @@ class SettingsScreenState extends State<SettingsScreen> {
   void initState() {
     super.initState();
     loadUsername();
+    loadNotificationState();
   }
 
-  loadUsername() async {
+  Future<void> loadUsername() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       username = prefs.getString('username') ?? '';
@@ -38,12 +39,24 @@ class SettingsScreenState extends State<SettingsScreen> {
     });
   }
 
-  saveUsername(String username) async {
+  Future<void> saveUsername(String username) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('username', username);
   }
 
-  showSnackbar(String message) {
+  Future<void> loadNotificationState() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      enableNotifications = prefs.getBool('enableNotifications') ?? false;
+    });
+  }
+
+  Future<void> saveNotificationState(bool value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('enableNotifications', value);
+  }
+
+  void showSnackbar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
@@ -82,17 +95,19 @@ class SettingsScreenState extends State<SettingsScreen> {
                       subtitle: 'Receive app updates and alerts',
                       icon: Icons.notifications_active_rounded,
                       value: enableNotifications,
-                      onChanged: (value) =>
-                          setState(() => enableNotifications = value),
+                      onChanged: (value) {
+                        setState(() => enableNotifications = value);
+                        saveNotificationState(value);
+                      },
                     ),
                     buildSettingOption(
                       title: 'Dark Mode',
                       subtitle: 'Switch between light and dark themes',
                       icon: Icons.dark_mode_rounded,
                       value: widget.isDarkTheme,
-                      onChanged: (value) => widget.onThemeChanged(value),
+                      onChanged: widget.onThemeChanged,
                     ),
-                    _buildSaveButton(),
+                    buildSaveButton(),
                   ],
                 ),
               ),
@@ -282,13 +297,13 @@ class SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  Widget _buildSaveButton() {
+  Widget buildSaveButton() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 20.0),
       child: ElevatedButton(
         onPressed: () {
           saveUsername(username);
-          showSnackbar('Username saved successfully!');
+          showSnackbar('Settings saved successfully!');
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: widget.isDarkTheme
